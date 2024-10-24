@@ -1,6 +1,6 @@
-import { Container, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
-import { Item } from "./Item";
+import { Container, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Item } from './Item';
 
 export const Content = () => {
   const todos = useSelector((state) => state.todo.todoList);
@@ -9,14 +9,14 @@ export const Content = () => {
   const filteredTodos = todos
     .filter((todo) => {
       if (
-        filterStatus.status !== "all" &&
+        filterStatus.status !== 'all' &&
         todo.status !== filterStatus.status
       ) {
         return false;
       }
 
       if (
-        filterStatus.priority !== "all" &&
+        filterStatus.priority !== 'all' &&
         todo.priority !== filterStatus.priority
       ) {
         return false;
@@ -25,13 +25,13 @@ export const Content = () => {
       return true;
     })
     .sort((a, b) => {
-      if (filterStatus.sortBy === "date-newest") {
-        return new Date(b.createdAt) - new Date(a.createdAt); 
-      } else if (filterStatus.sortBy === "date-oldest") {
-        return new Date(a.createdAt) - new Date(b.createdAt); 
-      } else if (filterStatus.sortBy === "priority") {
+      if (filterStatus.sortBy === 'date-newest') {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      } else if (filterStatus.sortBy === 'date-oldest') {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      } else if (filterStatus.sortBy === 'priority') {
         const priorityOrder = { high: 1, medium: 2, low: 3 };
-        return priorityOrder[a.priority] - priorityOrder[b.priority]; 
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
       }
       return 0;
     });
@@ -39,9 +39,9 @@ export const Content = () => {
   return (
     <Container
       sx={{
-        backgroundColor: "lightBlue",
-        borderRadius: "10px",
-        padding: "10px",
+        backgroundColor: 'lightBlue',
+        borderRadius: '10px',
+        padding: '10px',
       }}
     >
       {filteredTodos.length > 0 ? (

@@ -1,4 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit } from '@mui/icons-material';
 import {
   Button,
   Container,
@@ -6,11 +6,11 @@ import {
   FormGroup,
   Typography,
   Checkbox,
-} from "@mui/material";
-import { useDispatch } from "react-redux";
-import React, { useState, useEffect } from "react";
-import { deleteTodo, updateTodo } from "../slices/todoSlice";
-import { TodoModal } from "./TodoModal";
+} from '@mui/material';
+import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { deleteTodo, updateTodo } from '../slices/todoSlice';
+import { TodoModal } from './TodoModal';
 
 export const Item = ({ todo }) => {
   const dispatch = useDispatch();
@@ -18,11 +18,11 @@ export const Item = ({ todo }) => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   useEffect(() => {
-    setChecked(todo.status === "complete");
+    setChecked(todo.status === 'complete');
   }, [todo.status]);
 
   const handleCheck = () => {
-    const newStatus = checked ? "incomplete" : "complete";
+    const newStatus = checked ? 'incomplete' : 'complete';
     setChecked(!checked);
     dispatch(updateTodo({ ...todo, status: newStatus }));
   };
@@ -37,26 +37,26 @@ export const Item = ({ todo }) => {
 
   const getBadgeColor = (priority) => {
     switch (priority) {
-      case "high":
-        return "error"; 
-      case "medium":
-        return "warning"; 
-      case "low":
-        return "success"; 
+      case 'high':
+        return 'error';
+      case 'medium':
+        return 'warning';
+      case 'low':
+        return 'success';
       default:
-        return "default";
+        return 'default';
     }
   };
   return (
     <Container
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        backgroundColor: "white",
-        borderRadius: "10px",
-        marginY: "1.5rem",
-        padding: "1rem",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        marginY: '1.5rem',
+        padding: '1rem',
       }}
     >
       <FormGroup>

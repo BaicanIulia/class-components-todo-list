@@ -6,35 +6,35 @@ import {
   MenuItem,
   TextField,
   Typography,
-} from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Dropdown } from "./Dropdown";
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { v4 as uuid } from "uuid";
-import { addTodo, updateTodo } from "../slices/todoSlice";
-import dayjs from "dayjs";
+} from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Dropdown } from './Dropdown';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { v4 as uuid } from 'uuid';
+import { addTodo, updateTodo } from '../slices/todoSlice';
+import dayjs from 'dayjs';
 
 export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
   const dispatch = useDispatch();
 
   const initialState = {
-    title: "",
-    status: "incomplete",
-    priority: "low",
+    title: '',
+    status: 'incomplete',
+    priority: 'low',
     dueDate: null,
   };
 
   const [formData, setFormData] = useState(initialState);
 
   useEffect(() => {
-    if (type === "update" && todo) {
+    if (type === 'update' && todo) {
       setFormData({
-        title: todo.title ?? "",
-        status: todo.status ?? "incomplete",
-        priority: todo.priority ?? "low",
+        title: todo.title ?? '',
+        status: todo.status ?? 'incomplete',
+        priority: todo.priority ?? 'low',
         dueDate: todo.dueDate ?? null,
       });
     } else {
@@ -55,20 +55,20 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
     e.preventDefault();
     const { title, status, priority, dueDate } = formData;
     const todoPayload = {
-      id: type === "add" ? uuid() : todo.id,
+      id: type === 'add' ? uuid() : todo.id,
       title,
       status,
       priority,
-      ...(status === "incomplete" && {
+      ...(status === 'incomplete' && {
         dueDate: dueDate ? dueDate.toISOString() : null,
       }),
     };
 
     if (title && status && priority) {
-      if (type === "add") {
+      if (type === 'add') {
         dispatch(addTodo(todoPayload));
       }
-      if (type === "update") {
+      if (type === 'update') {
         if (
           todo.title !== title ||
           todo.status !== status ||
@@ -82,30 +82,32 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
     }
   };
 
-  console.log(new Date(), "current date", formData.dueDate, "dueDate");
+  console.log(new Date(), 'current date', formData.dueDate, 'dueDate');
   return (
     <Dialog
       onClose={() => setModalOpen(false)}
       open={modalOpen}
       sx={{
-        "& .MuiDialog-paper": {
-          width: "600px",
-          maxWidth: "100%",
-          minWidth: "300px",
+        '& .MuiDialog-paper': {
+          width: '600px',
+          maxWidth: '100%',
+          minWidth: '300px',
         },
       }}
     >
       {formData.dueDate && new Date(formData.dueDate) < new Date() && (
-        <Alert severity="warning">The due date has passed. Make sure to update your task!</Alert>
+        <Alert severity="warning">
+          The due date has passed. Make sure to update your task!
+        </Alert>
       )}
       <form onSubmit={(e) => handleSubmit(e)}>
         <Typography
           sx={{
-            fontSize: "2rem",
-            margin: "2rem",
+            fontSize: '2rem',
+            margin: '2rem',
           }}
         >
-          {type === "add" ? "Add" : "Updated"} TODO
+          {type === 'add' ? 'Add' : 'Updated'} TODO
         </Typography>
         <TextField
           label="Title"
@@ -115,16 +117,16 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
           onChange={handleInputChange}
           required
           sx={{
-            width: "94%",
-            marginTop: "0.5rem",
-            paddingX: "1rem",
+            width: '94%',
+            marginTop: '0.5rem',
+            paddingX: '1rem',
           }}
         />
         <Box
           sx={{
-            width: formData.status === "incomplete" ? "97%" : "99%",
-            display: "flex",
-            alignItems: "center",
+            width: formData.status === 'incomplete' ? '97%' : '99%',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           <Dropdown
@@ -136,7 +138,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
             <MenuItem value="complete">Complete</MenuItem>
           </Dropdown>
 
-          {formData.status === "incomplete" && (
+          {formData.status === 'incomplete' && (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Due Date"
@@ -148,7 +150,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
           )}
         </Box>
 
-        <Box sx={{ width: "94%" }}>
+        <Box sx={{ width: '94%' }}>
           <Dropdown
             value={formData.priority}
             name="priority"
@@ -161,14 +163,14 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
         </Box>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "1rem",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '1rem',
           }}
         >
           <Button variant="contained" type="submit">
-            {type === "add" ? "Add Task" : "Update Task"}
+            {type === 'add' ? 'Add Task' : 'Update Task'}
           </Button>
           <Button variant="outlined" onClick={() => setModalOpen(false)}>
             CANCEL

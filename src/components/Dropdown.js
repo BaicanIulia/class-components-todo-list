@@ -4,9 +4,9 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export const Dropdown = ({handleChange, value, children, ...props}) => {
+export const Dropdown = ({ handleChange, value, children, ...props }) => {
   return (
-    <Box sx={{ width:'100%', margin: '1rem' }}>
+    <Box sx={{ width: '100%', margin: '1rem' }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Status</InputLabel>
         <Select
@@ -22,4 +22,4 @@ export const Dropdown = ({handleChange, value, children, ...props}) => {
       </FormControl>
     </Box>
   );
-}
+};

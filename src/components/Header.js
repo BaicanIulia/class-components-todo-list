@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Box, Button, Container, MenuItem } from "@mui/material";
-import { Dropdown } from "./Dropdown";
-import { TodoModal } from "./TodoModal";
-import { updateFilterStatus } from "../slices/todoSlice";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from 'react';
+import { Box, Button, Container, MenuItem } from '@mui/material';
+import { Dropdown } from './Dropdown';
+import { TodoModal } from './TodoModal';
+import { updateFilterStatus } from '../slices/todoSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const Header = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -22,16 +22,16 @@ export const Header = () => {
   return (
     <Container
       sx={{
-        display: "flex",
-        justifyContent: "space-between",
+        display: 'flex',
+        justifyContent: 'space-between',
       }}
     >
-      <Box sx={{ marginTop: "25px" }}>
+      <Box sx={{ marginTop: '25px' }}>
         <Button variant="contained" onClick={handleClickOpen}>
           Add Task
         </Button>
       </Box>
-      <Box sx={{ width: "25%" }}>
+      <Box sx={{ width: '25%' }}>
         <Dropdown
           value={filterStatus.status}
           name="status"
