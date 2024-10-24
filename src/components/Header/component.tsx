@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, MenuItem } from '@mui/material';
-import { Dropdown } from './Dropdown';
-import { TodoModal } from './TodoModal';
-import { updateFilterStatus } from '../slices/todoSlice';
+import {
+  Box,
+  Button,
+  Container,
+  MenuItem,
+  SelectChangeEvent,
+} from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import { Dropdown } from '../Dropdown';
+import { updateFilterStatus } from '../../slices/todoSlice';
+import { TodoModal } from '../TodoModal';
+import { RootState } from '../../types/types';
 
 export const Header = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const filterStatus = useSelector((state) => state.todo.filterStatus);
+  const filterStatus = useSelector(
+    (state: RootState) => state.todo.filterStatus,
+  );
   const dispatch = useDispatch();
 
-  const updateFilter = (e) => {
+  const updateFilter = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     dispatch(updateFilterStatus({ [name]: value }));
   };

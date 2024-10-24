@@ -4,27 +4,35 @@ import {
   Button,
   Dialog,
   MenuItem,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Dropdown } from './Dropdown';
-import React, { useState, useEffect } from 'react';
+import { Dropdown } from '../Dropdown/component';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import { addTodo, updateTodo } from '../slices/todoSlice';
+import { addTodo, updateTodo } from '../../slices/todoSlice';
 import dayjs from 'dayjs';
+import { Todo } from '../../types/types';
 
-export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
+type Props = {
+  type: string;
+  modalOpen: boolean;
+  setModalOpen: (value: boolean) => void;
+  todo?: Todo;
+};
+export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
   const dispatch = useDispatch();
 
   const initialState = {
     title: '',
     status: 'incomplete',
     priority: 'low',
-    dueDate: null,
+    dueDate: null as string | null,
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -42,25 +50,33 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
     }
   }, [type, todo, modalOpen]);
 
-  const handleInputChange = (e) => {
+  const handleDropdownChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDateChange = (newValue) => {
-    setFormData((prev) => ({ ...prev, dueDate: newValue }));
+  const handleTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleDateChange = (newValue: dayjs.Dayjs | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      dueDate: newValue ? newValue.toISOString() : null, // Convert to ISO string or set to null
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { title, status, priority, dueDate } = formData;
     const todoPayload = {
-      id: type === 'add' ? uuid() : todo.id,
+      id: type === 'add' ? uuid() : todo?.id,
       title,
       status,
       priority,
       ...(status === 'incomplete' && {
-        dueDate: dueDate ? dueDate.toISOString() : null,
+        dueDate: dueDate ?? null,
       }),
     };
 
@@ -70,7 +86,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
       }
       if (type === 'update') {
         if (
-          todo.title !== title ||
+          todo?.title !== title ||
           todo.status !== status ||
           todo.priority !== priority ||
           todo.dueDate !== dueDate
@@ -82,7 +98,6 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
     }
   };
 
-  console.log(new Date(), 'current date', formData.dueDate, 'dueDate');
   return (
     <Dialog
       onClose={() => setModalOpen(false)}
@@ -95,11 +110,13 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
         },
       }}
     >
-      {formData.dueDate && new Date(formData.dueDate) < new Date() && (
-        <Alert severity="warning">
-          The due date has passed. Make sure to update your task!
-        </Alert>
-      )}
+      {formData.dueDate &&
+        new Date(formData.dueDate) < new Date() &&
+        formData.status === 'incomplete' && (
+          <Alert severity="warning">
+            The due date has passed. Make sure to update your task!
+          </Alert>
+        )}
       <form onSubmit={(e) => handleSubmit(e)}>
         <Typography
           sx={{
@@ -114,7 +131,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
           name="title"
           variant="outlined"
           value={formData.title}
-          onChange={handleInputChange}
+          onChange={handleTextInputChange}
           required
           sx={{
             width: '94%',
@@ -132,7 +149,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
           <Dropdown
             value={formData.status}
             name="status"
-            handleChange={(e) => handleInputChange(e)}
+            handleChange={(e) => handleDropdownChange(e)}
           >
             <MenuItem value="incomplete">Incomplete</MenuItem>
             <MenuItem value="complete">Complete</MenuItem>
@@ -154,7 +171,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }) => {
           <Dropdown
             value={formData.priority}
             name="priority"
-            handleChange={(e) => handleInputChange(e)}
+            handleChange={(e) => handleDropdownChange(e)}
           >
             <MenuItem value="low">Low</MenuItem>
             <MenuItem value="medium">Medium</MenuItem>

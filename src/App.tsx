@@ -1,6 +1,6 @@
-import { Header } from './components/Header';
 import { Content } from './components/Content';
 import { Container, Typography } from '@mui/material';
+import { Header } from './components/Header';
 
 function App() {
   return (

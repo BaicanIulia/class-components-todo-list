@@ -2,9 +2,20 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-export const Dropdown = ({ handleChange, value, children, ...props }) => {
+type Props = {
+  handleChange: (event: SelectChangeEvent<string>) => void;
+  value: string;
+  name: string;
+  children: React.ReactNode;
+};
+export const Dropdown = ({
+  handleChange,
+  value,
+  children,
+  ...props
+}: Props) => {
   return (
     <Box sx={{ width: '100%', margin: '1rem' }}>
       <FormControl fullWidth>

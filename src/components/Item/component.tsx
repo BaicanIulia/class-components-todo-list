@@ -9,10 +9,11 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
-import { deleteTodo, updateTodo } from '../slices/todoSlice';
-import { TodoModal } from './TodoModal';
+import { deleteTodo, updateTodo } from '../../slices/todoSlice';
+import { TodoModal } from '../TodoModal/component';
+import { Todo } from '../../types/types';
 
-export const Item = ({ todo }) => {
+export const Item = ({ todo }: { todo: Todo }) => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
@@ -35,7 +36,7 @@ export const Item = ({ todo }) => {
     setUpdateModalOpen(true);
   };
 
-  const getBadgeColor = (priority) => {
+  const getBadgeColor = (priority: string) => {
     switch (priority) {
       case 'high':
         return 'error';
