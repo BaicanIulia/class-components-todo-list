@@ -63,7 +63,7 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
   const handleDateChange = (newValue: dayjs.Dayjs | null) => {
     setFormData((prev) => ({
       ...prev,
-      dueDate: newValue ? newValue.toISOString() : null, // Convert to ISO string or set to null
+      dueDate: newValue ? newValue.toISOString() : null,
     }));
   };
 

@@ -8,7 +8,7 @@ import {
   Checkbox,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { deleteTodo, updateTodo } from '../../slices/todoSlice';
 import { TodoModal } from '../TodoModal/component';
 import { Todo } from '../../types/types';
@@ -48,6 +48,7 @@ export const Item = ({ todo }: { todo: Todo }) => {
         return 'default';
     }
   };
+
   return (
     <Container
       sx={{

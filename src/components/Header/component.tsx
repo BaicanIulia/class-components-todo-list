@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -35,12 +35,12 @@ export const Header = () => {
         justifyContent: 'space-between',
       }}
     >
-      <Box sx={{ marginTop: '25px' }}>
+      <Box sx={{ marginTop: '12px' }}>
         <Button variant="contained" onClick={handleClickOpen}>
           Add Task
         </Button>
       </Box>
-      <Box sx={{ width: '25%' }}>
+      <Box sx={{ width: '25%', pr: 2 }}>
         <Dropdown
           value={filterStatus.status}
           name="status"
@@ -51,7 +51,7 @@ export const Header = () => {
           <MenuItem value="complete">Complete</MenuItem>
         </Dropdown>
       </Box>
-      <Box>
+      <Box sx={{ pr: 2 }}>
         <Dropdown
           value={filterStatus.priority}
           name="priority"
