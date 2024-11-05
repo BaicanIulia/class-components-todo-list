@@ -9,14 +9,17 @@ import {
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { deleteTodo, updateTodo } from '../../slices/todoSlice';
-import { TodoModal } from '../TodoModal/component';
-import { Todo } from '../../types/types';
+import { deleteTodo, updateTodo } from '@store/slices/todoSlice';
+import { Todo } from '@types';
 
-export const Item = ({ todo }: { todo: Todo }) => {
+type Props = {
+  todo: Todo;
+  onEdit?: () => void;
+};
+
+export const Item = ({ todo, onEdit }: Props) => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState(false);
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   useEffect(() => {
     setChecked(todo.status === 'complete');
@@ -30,10 +33,6 @@ export const Item = ({ todo }: { todo: Todo }) => {
 
   const handleDelete = () => {
     dispatch(deleteTodo(todo.id));
-  };
-
-  const handleUpdate = () => {
-    setUpdateModalOpen(true);
   };
 
   const getBadgeColor = (priority: string) => {
@@ -75,16 +74,10 @@ export const Item = ({ todo }: { todo: Todo }) => {
         <Button onClick={handleDelete}>
           <Delete />
         </Button>
-        <Button onClick={handleUpdate}>
+        <Button onClick={onEdit}>
           <Edit />
         </Button>
       </div>
-      <TodoModal
-        type="update"
-        modalOpen={updateModalOpen}
-        setModalOpen={setUpdateModalOpen}
-        todo={todo}
-      />
     </Container>
   );
 };

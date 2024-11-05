@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import { Box, Button, Container, SelectChangeEvent } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { Dropdown } from '../Dropdown';
-import { updateFilterStatus } from '../../slices/todoSlice';
-import { TodoModal } from '../TodoModal';
-import { RootState } from '../../types/types';
+import { Dropdown } from '@components';
+import { updateFilterStatus } from '@store/slices/todoSlice';
+import { TodoModal } from '@features';
+import {
+  PRIORITY_OPTIONS,
+  SORT_BY_OPTIONS,
+  STATUS_OPTIONS,
+} from '@lib/constants';
+import { RootState } from '@types';
 
 export const Header = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -44,35 +43,25 @@ export const Header = () => {
         <Dropdown
           value={filterStatus.status}
           name="status"
-          handleChange={(e) => updateFilter(e)}
-        >
-          <MenuItem value="all">All</MenuItem>
-          <MenuItem value="incomplete">Incomplete</MenuItem>
-          <MenuItem value="complete">Complete</MenuItem>
-        </Dropdown>
+          handleChange={updateFilter}
+          options={STATUS_OPTIONS}
+        />
       </Box>
       <Box sx={{ pr: 2 }}>
         <Dropdown
           value={filterStatus.priority}
           name="priority"
-          handleChange={(e) => updateFilter(e)}
-        >
-          <MenuItem value="all">All Priorities</MenuItem>
-          <MenuItem value="low">Low</MenuItem>
-          <MenuItem value="medium">Medium</MenuItem>
-          <MenuItem value="high">High</MenuItem>
-        </Dropdown>
+          handleChange={updateFilter}
+          options={PRIORITY_OPTIONS}
+        />
       </Box>
       <Box>
         <Dropdown
           value={filterStatus.sortBy}
           name="sortBy"
-          handleChange={(e) => updateFilter(e)}
-        >
-          <MenuItem value="date-newest">Sort by Date - Newest</MenuItem>
-          <MenuItem value="date-oldest">Sort by Date - Oldest</MenuItem>
-          <MenuItem value="priority">Sort by Priority</MenuItem>
-        </Dropdown>
+          handleChange={updateFilter}
+          options={SORT_BY_OPTIONS}
+        />
       </Box>
       <TodoModal type="add" modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </Container>

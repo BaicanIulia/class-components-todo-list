@@ -3,28 +3,25 @@ import {
   Box,
   Button,
   Dialog,
-  MenuItem,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Dropdown } from '../Dropdown/component';
+import { DateSelector, Dropdown, TextInput } from '@components';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import { addTodo, updateTodo } from '../../slices/todoSlice';
+import { addTodo, updateTodo } from '@store/slices/todoSlice';
 import dayjs from 'dayjs';
-import { Todo } from '../../types/types';
+import { Todo } from '@types';
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@lib/constants';
 
 type Props = {
   type: string;
   modalOpen: boolean;
   setModalOpen: (value: boolean) => void;
-  todo?: Todo;
+  todo?: Todo | null;
 };
+
 export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
   const dispatch = useDispatch();
 
@@ -126,18 +123,11 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
         >
           {type === 'add' ? 'Add' : 'Updated'} TODO
         </Typography>
-        <TextField
+        <TextInput
           label="Title"
           name="title"
-          variant="outlined"
           value={formData.title}
           onChange={handleTextInputChange}
-          required
-          sx={{
-            width: '94%',
-            marginTop: '0.5rem',
-            paddingX: '1rem',
-          }}
         />
         <Box
           sx={{
@@ -150,33 +140,22 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
             value={formData.status}
             name="status"
             handleChange={(e) => handleDropdownChange(e)}
-          >
-            <MenuItem value="incomplete">Incomplete</MenuItem>
-            <MenuItem value="complete">Complete</MenuItem>
-          </Dropdown>
-
+            options={STATUS_OPTIONS}
+          />
           {formData.status === 'incomplete' && (
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Due Date"
-                name="dueDate"
-                value={formData.dueDate ? dayjs(formData.dueDate) : null}
-                onChange={handleDateChange}
-              />
-            </LocalizationProvider>
+            <DateSelector
+              dueDate={formData.dueDate}
+              onChange={handleDateChange}
+            />
           )}
         </Box>
-
         <Box sx={{ width: '94%' }}>
           <Dropdown
             value={formData.priority}
             name="priority"
             handleChange={(e) => handleDropdownChange(e)}
-          >
-            <MenuItem value="low">Low</MenuItem>
-            <MenuItem value="medium">Medium</MenuItem>
-            <MenuItem value="high">High</MenuItem>
-          </Dropdown>
+            options={PRIORITY_OPTIONS}
+          />
         </Box>
         <Box
           sx={{

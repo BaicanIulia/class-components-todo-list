@@ -1,9 +1,14 @@
 import { Container, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { Item } from '../Item/component';
-import { RootState } from '../../types/types';
+import { TodoModal } from '@features';
+import { Item } from '@components';
+import { RootState, Todo } from '@types';
+import { useState } from 'react';
 
 export const Content = () => {
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+
   const todos = useSelector((state: RootState) => state.todo.todoList);
   const filterStatus = useSelector(
     (state: RootState) => state.todo.filterStatus,
@@ -11,21 +16,13 @@ export const Content = () => {
 
   const filteredTodos = todos
     .filter((todo) => {
-      if (
-        filterStatus.status !== 'all' &&
-        todo.status !== filterStatus.status
-      ) {
-        return false;
-      }
+      const isStatusMatch =
+        filterStatus.status === 'all' || todo.status === filterStatus.status;
+      const isPriorityMatch =
+        filterStatus.priority === 'all' ||
+        todo.priority === filterStatus.priority;
 
-      if (
-        filterStatus.priority !== 'all' &&
-        todo.priority !== filterStatus.priority
-      ) {
-        return false;
-      }
-
-      return true;
+      return isStatusMatch && isPriorityMatch;
     })
     .sort((a, b) => {
       if (filterStatus.sortBy === 'date-newest') {
@@ -47,6 +44,11 @@ export const Content = () => {
       return 0;
     });
 
+  const handleEdit = (todo: Todo) => {
+    setSelectedTodo(todo);
+    setUpdateModalOpen(true);
+  };
+
   return (
     <Container
       sx={{
@@ -56,12 +58,18 @@ export const Content = () => {
       }}
     >
       {filteredTodos.length > 0 ? (
-        filteredTodos.map((todo, index) => (
-          <Item todo={todo} key={`${todo.title}-${index}`} />
+        filteredTodos.map((todo) => (
+          <Item todo={todo} key={todo.id} onEdit={() => handleEdit(todo)} />
         ))
       ) : (
         <Typography>No tasks found.</Typography>
       )}
+      <TodoModal
+        type="update"
+        modalOpen={updateModalOpen}
+        setModalOpen={setUpdateModalOpen}
+        todo={selectedTodo}
+      />
     </Container>
   );
 };
