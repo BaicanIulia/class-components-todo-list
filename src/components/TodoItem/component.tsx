@@ -8,44 +8,40 @@ import {
   Checkbox,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { deleteTodo, updateTodo } from '@store/slices/todoSlice';
+import { deleteTodo, updateTodo } from '@store';
 import { Todo } from '@types';
 
-type Props = {
+type TodoItemProps = {
   todo: Todo;
   onEdit?: () => void;
 };
 
-export const Item = ({ todo, onEdit }: Props) => {
+const getColor = (priority: string) => {
+  switch (priority) {
+    case 'high':
+      return 'error';
+    case 'medium':
+      return 'warning';
+    case 'low':
+      return 'success';
+    default:
+      return 'default';
+  }
+};
+
+export const TodoItem = ({ todo, onEdit }: TodoItemProps) => {
   const dispatch = useDispatch();
-  const [checked, setChecked] = useState(false);
 
-  useEffect(() => {
-    setChecked(todo.status === 'complete');
-  }, [todo.status]);
-
-  const handleCheck = () => {
-    const newStatus = checked ? 'incomplete' : 'complete';
-    setChecked(!checked);
+  const handleCheck = (
+    _e: React.ChangeEvent<HTMLInputElement>,
+    checked: boolean,
+  ) => {
+    const newStatus = !checked ? 'incomplete' : 'complete';
     dispatch(updateTodo({ ...todo, status: newStatus }));
   };
 
   const handleDelete = () => {
     dispatch(deleteTodo(todo.id));
-  };
-
-  const getBadgeColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'error';
-      case 'medium':
-        return 'warning';
-      case 'low':
-        return 'success';
-      default:
-        return 'default';
-    }
   };
 
   return (
@@ -56,15 +52,19 @@ export const Item = ({ todo, onEdit }: Props) => {
         justifyContent: 'space-between',
         backgroundColor: 'white',
         borderRadius: '10px',
-        marginY: '1.5rem',
-        padding: '1rem',
+        padding: 2,
       }}
     >
       <FormGroup>
         <FormControlLabel
-          control={<Checkbox checked={checked} onChange={handleCheck} />}
+          control={
+            <Checkbox
+              checked={todo.status === 'complete'}
+              onChange={handleCheck}
+            />
+          }
           label={
-            <Typography color={getBadgeColor(todo.priority)}>
+            <Typography color={getColor(todo.priority)}>
               {todo.title}
             </Typography>
           }

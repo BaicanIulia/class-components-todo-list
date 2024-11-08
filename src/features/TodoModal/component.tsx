@@ -10,32 +10,41 @@ import { DateSelector, Dropdown, TextInput } from '@components';
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import { addTodo, updateTodo } from '@store/slices/todoSlice';
+import { addTodo, updateTodo } from '@store';
 import dayjs from 'dayjs';
 import { Todo } from '@types';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@lib/constants';
 
-type Props = {
-  type: string;
+type TodoModalProps = {
   modalOpen: boolean;
   setModalOpen: (value: boolean) => void;
   todo?: Todo | null;
 };
 
-export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
+type TodoItemState = {
+  title: string;
+  status: string;
+  priority: string;
+  dueDate: string | null;
+};
+
+const initialState: TodoItemState = {
+  title: '',
+  status: 'incomplete',
+  priority: 'low',
+  dueDate: null,
+};
+
+export const TodoModal = ({
+  modalOpen,
+  setModalOpen,
+  todo,
+}: TodoModalProps) => {
   const dispatch = useDispatch();
-
-  const initialState = {
-    title: '',
-    status: 'incomplete',
-    priority: 'low',
-    dueDate: null as string | null,
-  };
-
-  const [formData, setFormData] = useState(initialState);
+  const [formData, setFormData] = useState<TodoItemState>(initialState);
 
   useEffect(() => {
-    if (type === 'update' && todo) {
+    if (todo) {
       setFormData({
         title: todo.title ?? '',
         status: todo.status ?? 'incomplete',
@@ -45,14 +54,11 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
     } else {
       setFormData(initialState);
     }
-  }, [type, todo, modalOpen]);
+  }, [todo]);
 
-  const handleDropdownChange = (e: SelectChangeEvent<string>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: SelectChangeEvent<string> | ChangeEvent<HTMLInputElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -67,8 +73,11 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { title, status, priority, dueDate } = formData;
+
+    if (!title || !status || !priority) return;
+
     const todoPayload = {
-      id: type === 'add' ? uuid() : todo?.id,
+      id: todo ? todo?.id : uuid(),
       title,
       status,
       priority,
@@ -77,22 +86,21 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
       }),
     };
 
-    if (title && status && priority) {
-      if (type === 'add') {
-        dispatch(addTodo(todoPayload));
+    if (todo) {
+      const hasChanges =
+        todo.title !== title ||
+        todo.status !== status ||
+        todo.priority !== priority ||
+        todo.dueDate !== dueDate;
+
+      if (hasChanges) {
+        dispatch(updateTodo({ ...todo, ...todoPayload }));
       }
-      if (type === 'update') {
-        if (
-          todo?.title !== title ||
-          todo.status !== status ||
-          todo.priority !== priority ||
-          todo.dueDate !== dueDate
-        ) {
-          dispatch(updateTodo({ ...todo, ...todoPayload }));
-        }
-      }
-      setModalOpen(false);
+    } else {
+      dispatch(addTodo(todoPayload));
     }
+
+    setModalOpen(false);
   };
 
   return (
@@ -114,33 +122,34 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
             The due date has passed. Make sure to update your task!
           </Alert>
         )}
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <Typography
-          sx={{
-            fontSize: '2rem',
-            margin: '2rem',
-          }}
-        >
-          {type === 'add' ? 'Add' : 'Updated'} TODO
-        </Typography>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          padding: 20,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 20,
+        }}
+      >
+        <Typography variant="h3">{todo ? 'Update' : 'Add'} TODO</Typography>
         <TextInput
           label="Title"
           name="title"
           value={formData.title}
-          onChange={handleTextInputChange}
+          onChange={handleChange}
         />
         <Box
           sx={{
-            width: formData.status === 'incomplete' ? '97%' : '99%',
             display: 'flex',
-            alignItems: 'center',
+            gap: 2,
           }}
         >
           <Dropdown
             value={formData.status}
             name="status"
-            handleChange={(e) => handleDropdownChange(e)}
-            options={STATUS_OPTIONS}
+            label="Status"
+            handleChange={handleChange}
+            options={STATUS_OPTIONS.filter((option) => option.value !== 'all')}
           />
           {formData.status === 'incomplete' && (
             <DateSelector
@@ -149,24 +158,21 @@ export const TodoModal = ({ type, modalOpen, setModalOpen, todo }: Props) => {
             />
           )}
         </Box>
-        <Box sx={{ width: '94%' }}>
-          <Dropdown
-            value={formData.priority}
-            name="priority"
-            handleChange={(e) => handleDropdownChange(e)}
-            options={PRIORITY_OPTIONS}
-          />
-        </Box>
+        <Dropdown
+          value={formData.priority}
+          name="priority"
+          label="Priority"
+          handleChange={handleChange}
+          options={PRIORITY_OPTIONS.filter((option) => option.value !== 'all')}
+        />
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '1rem',
           }}
         >
           <Button variant="contained" type="submit">
-            {type === 'add' ? 'Add Task' : 'Update Task'}
+            {todo ? 'Update Task' : 'Add Task'}
           </Button>
           <Button variant="outlined" onClick={() => setModalOpen(false)}>
             CANCEL

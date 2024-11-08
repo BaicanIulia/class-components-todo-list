@@ -1,10 +1,10 @@
-import { Container, Typography } from '@mui/material';
+import { Container, ThemeProvider, Typography } from '@mui/material';
 import React, { Suspense, useEffect } from 'react';
 import { Provider, useDispatch } from 'react-redux';
-import { store } from '@store/store';
-import { setTodoList } from '@store/slices/todoSlice';
-import { Header, Content } from '@features';
+import { store, setTodoList } from '@store';
+import { TodoHeader, TodoContent } from '@features';
 import { Todo } from '@types';
+import { theme } from '../theme';
 
 const AppContent = () => {
   const dispatch = useDispatch();
@@ -21,19 +21,9 @@ const AppContent = () => {
 
   return (
     <>
-      <Typography
-        sx={{
-          display: 'inline-block',
-          width: '100%',
-          fontSize: '4rem',
-          textAlign: 'center',
-          marginBottom: '2rem',
-        }}
-      >
-        TODO LIST
-      </Typography>
-      <Header />
-      <Content />
+      <Typography variant="h2">TODO LIST</Typography>
+      <TodoHeader />
+      <TodoContent />
     </>
   );
 };
@@ -42,15 +32,16 @@ const HomePage = () => {
   return (
     <Suspense>
       <Provider store={store}>
-        <Container
-          sx={{
-            width: '750px',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <AppContent />
-        </Container>
+        <ThemeProvider theme={theme}>
+          <Container
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <AppContent />
+          </Container>
+        </ThemeProvider>
       </Provider>
     </Suspense>
   );

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Container, SelectChangeEvent } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dropdown } from '@components';
-import { updateFilterStatus } from '@store/slices/todoSlice';
+import { updateFilterStatus } from '@store';
 import { TodoModal } from '@features';
 import {
   PRIORITY_OPTIONS,
@@ -11,7 +11,7 @@ import {
 } from '@lib/constants';
 import { RootState } from '@types';
 
-export const Header = () => {
+export const TodoHeader = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const filterStatus = useSelector(
     (state: RootState) => state.todo.filterStatus,
@@ -32,38 +32,43 @@ export const Header = () => {
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'center',
       }}
     >
-      <Box sx={{ marginTop: '12px' }}>
-        <Button variant="contained" onClick={handleClickOpen}>
-          Add Task
-        </Button>
-      </Box>
-      <Box sx={{ width: '25%', pr: 2 }}>
+      <Button variant="contained" onClick={handleClickOpen}>
+        Add Task
+      </Button>
+      <Box
+        sx={{
+          display: 'flex',
+          flex: '1',
+          marginLeft: 10,
+          gap: 1,
+        }}
+      >
         <Dropdown
           value={filterStatus.status}
           name="status"
+          label="Status"
           handleChange={updateFilter}
           options={STATUS_OPTIONS}
         />
-      </Box>
-      <Box sx={{ pr: 2 }}>
         <Dropdown
           value={filterStatus.priority}
           name="priority"
+          label="Priority"
           handleChange={updateFilter}
           options={PRIORITY_OPTIONS}
         />
-      </Box>
-      <Box>
         <Dropdown
           value={filterStatus.sortBy}
           name="sortBy"
+          label="Sort by"
           handleChange={updateFilter}
           options={SORT_BY_OPTIONS}
         />
       </Box>
-      <TodoModal type="add" modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <TodoModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
     </Container>
   );
 };

@@ -1,3 +1,3 @@
-export { Content } from './Content';
-export { Header } from './Header';
+export { TodoContent } from './TodoContent';
+export { TodoHeader } from './TodoHeader';
 export { TodoModal } from './TodoModal';

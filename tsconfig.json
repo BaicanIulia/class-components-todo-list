@@ -14,6 +14,7 @@
       "@features/*": ["src/features/*"],
       "@features": ["src/features"],
       "@store/*": ["src/store/*"],
+      "@store": ["src/store"],
       "@types": ["src/types"],
       "@lib/*": ["src/lib/*"]
     },

@@ -1,20 +1,12 @@
 import { Container, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { TodoModal } from '@features';
-import { Item } from '@components';
-import { RootState, Todo } from '@types';
+import { TodoItem } from '@components';
+import { FilterStatus, RootState, Todo } from '@types';
 import { useState } from 'react';
 
-export const Content = () => {
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
-
-  const todos = useSelector((state: RootState) => state.todo.todoList);
-  const filterStatus = useSelector(
-    (state: RootState) => state.todo.filterStatus,
-  );
-
-  const filteredTodos = todos
+const filterTodos = (todos: Todo[], filterStatus: FilterStatus) => {
+  return todos
     .filter((todo) => {
       const isStatusMatch =
         filterStatus.status === 'all' || todo.status === filterStatus.status;
@@ -43,6 +35,18 @@ export const Content = () => {
       }
       return 0;
     });
+};
+
+export const TodoContent = () => {
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+
+  const todos = useSelector((state: RootState) => state.todo.todoList);
+  const filterStatus = useSelector(
+    (state: RootState) => state.todo.filterStatus,
+  );
+
+  const filteredTodos = filterTodos(todos, filterStatus);
 
   const handleEdit = (todo: Todo) => {
     setSelectedTodo(todo);
@@ -59,13 +63,12 @@ export const Content = () => {
     >
       {filteredTodos.length > 0 ? (
         filteredTodos.map((todo) => (
-          <Item todo={todo} key={todo.id} onEdit={() => handleEdit(todo)} />
+          <TodoItem todo={todo} key={todo.id} onEdit={() => handleEdit(todo)} />
         ))
       ) : (
         <Typography>No tasks found.</Typography>
       )}
       <TodoModal
-        type="update"
         modalOpen={updateModalOpen}
         setModalOpen={setUpdateModalOpen}
         todo={selectedTodo}

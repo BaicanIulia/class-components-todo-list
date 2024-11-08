@@ -7,6 +7,12 @@ export type Todo = {
   createdAt: string;
 };
 
+export type FilterStatus = {
+  status: string;
+  priority: string;
+  sortBy: string;
+};
+
 export type RootState = {
   todo: {
     todoList: Todo[];

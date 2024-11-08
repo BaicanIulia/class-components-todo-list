@@ -1,5 +1,4 @@
 import {
-  Box,
   InputLabel,
   FormControl,
   Select,
@@ -12,32 +11,37 @@ type Option = {
   label: string;
 };
 
-type Props = {
+type DropdownProps = {
   handleChange: (event: SelectChangeEvent<string>) => void;
   value: string;
   name: string;
+  label: string;
   options: Option[];
 };
 
-export const Dropdown = ({ handleChange, value, name, options }: Props) => {
+export const Dropdown = ({
+  handleChange,
+  value,
+  name,
+  label,
+  options,
+}: DropdownProps) => {
   return (
-    <Box sx={{ width: '100%', margin: '1rem' }}>
-      <FormControl fullWidth>
-        <InputLabel id={`${name}-select-label`}>Status</InputLabel>
-        <Select
-          id={`${name}-select`}
-          value={value}
-          label={name}
-          onChange={handleChange}
-          name={name}
-        >
-          {options.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+    <FormControl fullWidth>
+      <InputLabel id={`${label}-select-label`}>{label}</InputLabel>
+      <Select
+        id={`${name}-select`}
+        value={value}
+        label={label}
+        onChange={handleChange}
+        name={name}
+      >
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };

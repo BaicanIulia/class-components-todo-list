@@ -1,14 +1,14 @@
 import { TextField } from '@mui/material';
 import { ChangeEvent } from 'react';
 
-type Props = {
+type TextInputProps = {
   value: string;
   label: string;
   name: string;
-
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
-export const TextInput = ({ value, label, name, onChange }: Props) => (
+
+export const TextInput = ({ value, label, name, onChange }: TextInputProps) => (
   <TextField
     label={label}
     name={name}
@@ -16,10 +16,6 @@ export const TextInput = ({ value, label, name, onChange }: Props) => (
     value={value}
     onChange={onChange}
     required
-    sx={{
-      width: '94%',
-      marginTop: '0.5rem',
-      paddingX: '1rem',
-    }}
+    fullWidth
   />
 );
