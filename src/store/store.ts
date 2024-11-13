@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import todoReducer from './slices/todoSlice';
-import clientOnlyMiddleware from '../middleware';
+import { clientOnlyMiddleware } from './middlewares/clientOnlyMiddleware';
 
 export const store = configureStore({
   reducer: {

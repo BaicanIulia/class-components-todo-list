@@ -46,29 +46,22 @@ export const todoSlice = createSlice({
       const todoList = window.localStorage.getItem('todoList');
       if (todoList) {
         const todoListArr: Todo[] = JSON.parse(todoList);
-        todoListArr.forEach((todo) => {
-          if (todo.id === action.payload.id) {
-            todo.status = action.payload.status;
-            todo.title = action.payload.title;
-            todo.priority = action.payload.priority;
-            todo.dueDate = action.payload.dueDate;
-          }
-        });
-        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-        state.todoList = [...todoListArr];
+        const updatedList = todoListArr.map((todo) =>
+          todo.id === action.payload.id
+            ? { ...todo, ...action.payload }
+            : todo
+        )
+        window.localStorage.setItem('todoList', JSON.stringify(updatedList));
+        state.todoList = updatedList;
       }
     },
     deleteTodo: (state, action) => {
       const todoList = window.localStorage.getItem('todoList');
       if (todoList) {
         const todoListArr: Todo[] = JSON.parse(todoList);
-        todoListArr.forEach((todo, index) => {
-          if (todo.id === action.payload) {
-            todoListArr.splice(index, 1);
-          }
-        });
-        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-        state.todoList = todoListArr;
+        const updatedList = todoListArr.filter((todo) => todo.id !== action.payload);
+        window.localStorage.setItem('todoList', JSON.stringify(updatedList));
+        state.todoList = updatedList;
       }
     },
     updateFilterStatus: (state, action) => {
