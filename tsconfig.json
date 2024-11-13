@@ -2,11 +2,30 @@
   "compilerOptions": {
     "target": "es2016" /* Set the JavaScript language version for emitted JavaScript */,
     "module": "commonjs" /* Specify what module code is generated */,
-    "jsx": "react-jsx" /* Enable JSX support for React 17 and later */,
+    "jsx": "preserve" /* Enable JSX support for React 17 and later */,
     "esModuleInterop": true /* Enable interoperability between CommonJS and ES Modules */,
     "forceConsistentCasingInFileNames": true /* Ensure consistent casing in imports */,
     "strict": true /* Enable all strict type-checking options */,
-    "skipLibCheck": true /* Skip type checking for declaration files */
+    "skipLibCheck": true /* Skip type checking for declaration files */,
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@components": ["src/components"],
+      "@features/*": ["src/features/*"],
+      "@features": ["src/features"],
+      "@store/*": ["src/store/*"],
+      "@store": ["src/store"],
+      "@types": ["src/types"],
+      "@lib/*": ["src/lib/*"]
+    },
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": ["src"] /* Include all files in the src directory */
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+  "exclude": ["node_modules"]
 }

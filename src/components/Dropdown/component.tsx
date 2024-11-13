@@ -1,37 +1,47 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {
+  InputLabel,
+  FormControl,
+  Select,
+  SelectChangeEvent,
+  MenuItem,
+} from '@mui/material';
 
-type Props = {
+type Option = {
+  value: string;
+  label: string;
+};
+
+type DropdownProps = {
   handleChange: (event: SelectChangeEvent<string>) => void;
   value: string;
   name: string;
-  children: React.ReactNode;
+  label: string;
+  options: Option[];
 };
 
 export const Dropdown = ({
   handleChange,
   value,
-  children,
-  ...props
-}: Props) => {
+  name,
+  label,
+  options,
+}: DropdownProps) => {
   return (
-    <Box sx={{ width: '100%', margin: '1rem' }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Status</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={value}
-          label="Status"
-          onChange={handleChange}
-          {...props}
-        >
-          {children}
-        </Select>
-      </FormControl>
-    </Box>
+    <FormControl fullWidth>
+      <InputLabel id={`${label}-select-label`}>{label}</InputLabel>
+      <Select
+        id={`${name}-select`}
+        value={value}
+        label={label}
+        onChange={handleChange}
+        name={name}
+      >
+        {options.map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 };

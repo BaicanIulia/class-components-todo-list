@@ -1,29 +1,31 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { Todo } from '../types/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Todo } from '@types';
 
-const getInitialTodo = (): Todo[] => {
-  const localTodoList = window.localStorage.getItem('todoList');
+interface TodoState {
+  filterStatus: {
+    status: 'all' | 'complete' | 'incomplete';
+    priority: 'all' | 'high' | 'medium' | 'low';
+    sortBy: 'date-newest' | 'date-oldest' | 'priority';
+  };
+  todoList: Todo[];
+}
 
-  if (localTodoList) {
-    return JSON.parse(localTodoList);
-  }
-  window.localStorage.setItem('todoList', JSON.stringify([]));
-  return [];
-};
-
-const initialValue = {
+const initialValue: TodoState = {
   filterStatus: {
     status: 'all',
     priority: 'all',
     sortBy: 'date-newest',
   },
-  todoList: getInitialTodo(),
+  todoList: [],
 };
 
 export const todoSlice = createSlice({
   name: 'todo',
   initialState: initialValue,
   reducers: {
+    setTodoList: (state, action: PayloadAction<Todo[]>) => {
+      state.todoList = action.payload;
+    },
     addTodo: (state, action) => {
       const newTodo = {
         ...action.payload,
@@ -44,29 +46,22 @@ export const todoSlice = createSlice({
       const todoList = window.localStorage.getItem('todoList');
       if (todoList) {
         const todoListArr: Todo[] = JSON.parse(todoList);
-        todoListArr.forEach((todo) => {
-          if (todo.id === action.payload.id) {
-            todo.status = action.payload.status;
-            todo.title = action.payload.title;
-            todo.priority = action.payload.priority;
-            todo.dueDate = action.payload.dueDate;
-          }
-        });
-        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-        state.todoList = [...todoListArr];
+        const updatedList = todoListArr.map((todo) =>
+          todo.id === action.payload.id
+            ? { ...todo, ...action.payload }
+            : todo
+        )
+        window.localStorage.setItem('todoList', JSON.stringify(updatedList));
+        state.todoList = updatedList;
       }
     },
     deleteTodo: (state, action) => {
       const todoList = window.localStorage.getItem('todoList');
       if (todoList) {
         const todoListArr: Todo[] = JSON.parse(todoList);
-        todoListArr.forEach((todo, index) => {
-          if (todo.id === action.payload) {
-            todoListArr.splice(index, 1);
-          }
-        });
-        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-        state.todoList = todoListArr;
+        const updatedList = todoListArr.filter((todo) => todo.id !== action.payload);
+        window.localStorage.setItem('todoList', JSON.stringify(updatedList));
+        state.todoList = updatedList;
       }
     },
     updateFilterStatus: (state, action) => {
@@ -75,6 +70,11 @@ export const todoSlice = createSlice({
   },
 });
 
-export const { addTodo, updateTodo, deleteTodo, updateFilterStatus } =
-  todoSlice.actions;
+export const {
+  setTodoList,
+  addTodo,
+  updateTodo,
+  deleteTodo,
+  updateFilterStatus,
+} = todoSlice.actions;
 export default todoSlice.reducer;
