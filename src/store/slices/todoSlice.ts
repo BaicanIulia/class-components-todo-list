@@ -33,48 +33,42 @@ export const todoSlice = createSlice({
       };
       state.todoList.push(newTodo);
 
-      if (typeof window !== 'undefined') {
-        const todoList = window.localStorage.getItem('todoList');
-        if (todoList) {
-          const todoListArr = JSON.parse(todoList);
-          todoListArr.push(newTodo);
-          window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-        } else {
-          window.localStorage.setItem('todoList', JSON.stringify([newTodo]));
-        }
+      const todoList = window.localStorage.getItem('todoList');
+      if (todoList) {
+        const todoListArr = JSON.parse(todoList);
+        todoListArr.push(newTodo);
+        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
+      } else {
+        window.localStorage.setItem('todoList', JSON.stringify([newTodo]));
       }
     },
     updateTodo: (state, action) => {
-      if (typeof window !== 'undefined') {
-        const todoList = window.localStorage.getItem('todoList');
-        if (todoList) {
-          const todoListArr: Todo[] = JSON.parse(todoList);
-          todoListArr.forEach((todo) => {
-            if (todo.id === action.payload.id) {
-              todo.status = action.payload.status;
-              todo.title = action.payload.title;
-              todo.priority = action.payload.priority;
-              todo.dueDate = action.payload.dueDate;
-            }
-          });
-          window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-          state.todoList = [...todoListArr];
-        }
+      const todoList = window.localStorage.getItem('todoList');
+      if (todoList) {
+        const todoListArr: Todo[] = JSON.parse(todoList);
+        todoListArr.forEach((todo) => {
+          if (todo.id === action.payload.id) {
+            todo.status = action.payload.status;
+            todo.title = action.payload.title;
+            todo.priority = action.payload.priority;
+            todo.dueDate = action.payload.dueDate;
+          }
+        });
+        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
+        state.todoList = [...todoListArr];
       }
     },
     deleteTodo: (state, action) => {
-      if (typeof window !== 'undefined') {
-        const todoList = window.localStorage.getItem('todoList');
-        if (todoList) {
-          const todoListArr: Todo[] = JSON.parse(todoList);
-          todoListArr.forEach((todo, index) => {
-            if (todo.id === action.payload) {
-              todoListArr.splice(index, 1);
-            }
-          });
-          window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
-          state.todoList = todoListArr;
-        }
+      const todoList = window.localStorage.getItem('todoList');
+      if (todoList) {
+        const todoListArr: Todo[] = JSON.parse(todoList);
+        todoListArr.forEach((todo, index) => {
+          if (todo.id === action.payload) {
+            todoListArr.splice(index, 1);
+          }
+        });
+        window.localStorage.setItem('todoList', JSON.stringify(todoListArr));
+        state.todoList = todoListArr;
       }
     },
     updateFilterStatus: (state, action) => {
