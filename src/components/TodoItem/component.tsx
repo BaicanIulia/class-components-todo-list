@@ -7,13 +7,16 @@ import {
   Typography,
   Checkbox,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { Component } from 'react';
+import { Dispatch } from 'redux';
 import { deleteTodo, updateTodo } from '@store';
 import { Todo } from '@types';
 
 type TodoItemProps = {
   todo: Todo;
   onEdit?: () => void;
+  dispatch: Dispatch;
 };
 
 const getColor = (priority: string) => {
@@ -29,55 +32,56 @@ const getColor = (priority: string) => {
   }
 };
 
-export const TodoItem = ({ todo, onEdit }: TodoItemProps) => {
-  const dispatch = useDispatch();
-
-  const handleCheck = (
-    _e: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean,
-  ) => {
+class Item extends Component<TodoItemProps> {
+  handleCheck = (_e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const newStatus = !checked ? 'incomplete' : 'complete';
-    dispatch(updateTodo({ ...todo, status: newStatus }));
+    this.props.dispatch(updateTodo({ ...this.props.todo, status: newStatus }));
   };
 
-  const handleDelete = () => {
-    dispatch(deleteTodo(todo.id));
+  handleDelete = () => {
+    this.props.dispatch(deleteTodo(this.props.todo.id));
   };
 
-  return (
-    <Container
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'white',
-        borderRadius: '10px',
-        padding: 2,
-      }}
-    >
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={todo.status === 'complete'}
-              onChange={handleCheck}
-            />
-          }
-          label={
-            <Typography color={getColor(todo.priority)}>
-              {todo.title}
-            </Typography>
-          }
-        />
-      </FormGroup>
-      <div>
-        <Button onClick={handleDelete}>
-          <Delete />
-        </Button>
-        <Button onClick={onEdit}>
-          <Edit />
-        </Button>
-      </div>
-    </Container>
-  );
-};
+  render() {
+    const { todo, onEdit } = this.props;
+
+    return (
+      <Container
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+          padding: 2,
+        }}
+      >
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={todo.status === 'complete'}
+                onChange={this.handleCheck}
+              />
+            }
+            label={
+              <Typography color={getColor(todo.priority)}>
+                {todo.title}
+              </Typography>
+            }
+          />
+        </FormGroup>
+        <div>
+          <Button onClick={this.handleDelete}>
+            <Delete />
+          </Button>
+          <Button onClick={onEdit}>
+            <Edit />
+          </Button>
+        </div>
+      </Container>
+    );
+  }
+}
+
+export const TodoItem = connect()(Item);
