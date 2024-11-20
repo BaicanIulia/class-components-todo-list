@@ -18,7 +18,7 @@ type TodoHeaderProps = {
     priority: string;
     sortBy: string;
   };
-  dispatch: Dispatch;
+  updateFilterStatus: (filter: { [key: string]: string }) => void;
 };
 
 type TodoHeaderState = {
@@ -32,9 +32,6 @@ class Header extends Component<TodoHeaderProps, TodoHeaderState> {
     this.state = {
       modalOpen: false,
     };
-
-    this.handleClickOpen = this.handleClickOpen.bind(this);
-    this.updateFilter = this.updateFilter.bind(this);
   }
 
   handleClickOpen = () => {
@@ -43,11 +40,13 @@ class Header extends Component<TodoHeaderProps, TodoHeaderState> {
 
   updateFilter = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
-    this.props.dispatch(updateFilterStatus({ [name]: value }));
+    this.props.updateFilterStatus({ [name]: value });
   };
 
   render() {
-    const { filterStatus } = this.props;
+    const {
+      filterStatus: { status, priority, sortBy },
+    } = this.props;
     const { modalOpen } = this.state;
 
     return (
@@ -70,21 +69,21 @@ class Header extends Component<TodoHeaderProps, TodoHeaderState> {
           }}
         >
           <Dropdown
-            value={filterStatus.status}
+            value={status}
             name="status"
             label="Status"
             handleChange={this.updateFilter}
             options={STATUS_OPTIONS}
           />
           <Dropdown
-            value={filterStatus.priority}
+            value={priority}
             name="priority"
             label="Priority"
             handleChange={this.updateFilter}
             options={PRIORITY_OPTIONS}
           />
           <Dropdown
-            value={filterStatus.sortBy}
+            value={sortBy}
             name="sortBy"
             label="Sort by"
             handleChange={this.updateFilter}
@@ -104,4 +103,8 @@ const mapStateToProps = (state: RootState) => ({
   filterStatus: state.todo.filterStatus,
 });
 
-export const TodoHeader = connect(mapStateToProps)(Header);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  updateFilterStatus: (filter: any) => dispatch(updateFilterStatus(filter)),
+});
+
+export const TodoHeader = connect(mapStateToProps, mapDispatchToProps)(Header);
