@@ -4,7 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
 type DateSelectorProps = {
-  dueDate: string | null;
+  dueDate: string | undefined;
   onChange: (newValue: dayjs.Dayjs | null) => void;
 };
 
@@ -14,7 +14,7 @@ export const DateSelector = ({ dueDate, onChange }: DateSelectorProps) => {
       <DatePicker
         label="Due Date"
         name="dueDate"
-        value={dueDate ? dayjs(dueDate) : null}
+        value={dueDate ? dayjs(dueDate) : undefined}
         onChange={onChange}
       />
     </LocalizationProvider>
