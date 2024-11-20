@@ -16,7 +16,8 @@ import { Todo } from '@types';
 type TodoItemProps = {
   todo: Todo;
   onEdit?: () => void;
-  dispatch: Dispatch;
+  deleteTodo: (id: string) => void;
+  updateTodo: (todo: Todo) => void;
 };
 
 const getColor = (priority: string) => {
@@ -35,11 +36,11 @@ const getColor = (priority: string) => {
 class Item extends Component<TodoItemProps> {
   handleCheck = (_e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     const newStatus = !checked ? 'incomplete' : 'complete';
-    this.props.dispatch(updateTodo({ ...this.props.todo, status: newStatus }));
+    this.props.updateTodo({ ...this.props.todo, status: newStatus });
   };
 
   handleDelete = () => {
-    this.props.dispatch(deleteTodo(this.props.todo.id));
+    this.props.deleteTodo(this.props.todo.id);
   };
 
   render() {
@@ -84,4 +85,9 @@ class Item extends Component<TodoItemProps> {
   }
 }
 
-export const TodoItem = connect()(Item);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  deleteTodo: (id: string) => dispatch(deleteTodo(id)),
+  updateTodo: (todo: Todo) => dispatch(updateTodo(todo)),
+});
+
+export const TodoItem = connect(null, mapDispatchToProps)(Item);
