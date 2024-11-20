@@ -9,16 +9,12 @@ import {
   SORT_BY_OPTIONS,
   STATUS_OPTIONS,
 } from '@lib/constants';
-import { RootState } from '@types';
+import { FilterStatus, RootState } from '@types';
 import { Dispatch } from 'redux';
 
 type TodoHeaderProps = {
-  filterStatus: {
-    status: string;
-    priority: string;
-    sortBy: string;
-  };
-  updateFilterStatus: (filter: { [key: string]: string }) => void;
+  filterStatus: FilterStatus;
+  updateFilterStatus: (filter: Partial<FilterStatus>) => void;
 };
 
 type TodoHeaderState = {
@@ -104,7 +100,8 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  updateFilterStatus: (filter: any) => dispatch(updateFilterStatus(filter)),
+  updateFilterStatus: (filter: Partial<FilterStatus>) =>
+    dispatch(updateFilterStatus(filter)),
 });
 
 export const TodoHeader = connect(mapStateToProps, mapDispatchToProps)(Header);
