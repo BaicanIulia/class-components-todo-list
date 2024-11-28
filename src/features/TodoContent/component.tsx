@@ -72,7 +72,7 @@ class Content extends Component<TodoContentProps, TodoContentState> {
         sx={{
           backgroundColor: 'lightBlue',
           borderRadius: 2,
-          padding: 2.5 ,
+          padding: 2.5,
         }}
       >
         {filteredTodos.length > 0 ? (
