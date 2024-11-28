@@ -58,7 +58,7 @@ class Modal extends Component<TodoModalProps, TodoItemState> {
   }
 
   componentWillUnmount(): void {
-    this.setState(initialState)
+    this.setState(initialState);
   }
 
   handleChange = (

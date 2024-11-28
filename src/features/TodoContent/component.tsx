@@ -62,8 +62,8 @@ class Content extends Component<TodoContentProps, TodoContentState> {
   };
 
   handleModalOpen = (value: boolean) => {
-    this.setState({ modalOpen: value })
-  }
+    this.setState({ modalOpen: value });
+  };
 
   render() {
     const { modalOpen, selectedTodo } = this.state;

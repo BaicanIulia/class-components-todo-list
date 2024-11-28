@@ -11,7 +11,7 @@ type TextInputProps = {
 export class TextInput extends Component<TextInputProps> {
   render() {
     const { value, label, name, onChange } = this.props;
-    
+
     return (
       <TextField
         label={label}
