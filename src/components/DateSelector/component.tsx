@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { Component } from 'react';
 
 type DateSelectorProps = {
-  dueDate: string | null;
+  dueDate: string | undefined;
   onChange: (newValue: dayjs.Dayjs | null) => void;
 };
 

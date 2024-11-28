@@ -61,6 +61,10 @@ class Content extends Component<TodoContentProps, TodoContentState> {
     this.setState({ selectedTodo: todo, modalOpen: true });
   };
 
+  handleModalOpen = (value: boolean) => {
+    this.setState({ modalOpen: value });
+  };
+
   render() {
     const { modalOpen, selectedTodo } = this.state;
     const { todos, filterStatus } = this.props;
@@ -86,11 +90,13 @@ class Content extends Component<TodoContentProps, TodoContentState> {
         ) : (
           <Typography>No tasks found.</Typography>
         )}
-        <TodoModal
-          modalOpen={modalOpen}
-          setModalOpen={(value) => this.setState({ modalOpen: value })}
-          todo={selectedTodo}
-        />
+        {modalOpen && (
+          <TodoModal
+            modalOpen={modalOpen}
+            setModalOpen={this.handleModalOpen}
+            todo={selectedTodo}
+          />
+        )}
       </Container>
     );
   }
