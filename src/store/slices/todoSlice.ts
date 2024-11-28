@@ -47,10 +47,8 @@ export const todoSlice = createSlice({
       if (todoList) {
         const todoListArr: Todo[] = JSON.parse(todoList);
         const updatedList = todoListArr.map((todo) =>
-          todo.id === action.payload.id
-            ? { ...todo, ...action.payload }
-            : todo
-        )
+          todo.id === action.payload.id ? { ...todo, ...action.payload } : todo,
+        );
         window.localStorage.setItem('todoList', JSON.stringify(updatedList));
         state.todoList = updatedList;
       }
@@ -59,7 +57,9 @@ export const todoSlice = createSlice({
       const todoList = window.localStorage.getItem('todoList');
       if (todoList) {
         const todoListArr: Todo[] = JSON.parse(todoList);
-        const updatedList = todoListArr.filter((todo) => todo.id !== action.payload);
+        const updatedList = todoListArr.filter(
+          (todo) => todo.id !== action.payload,
+        );
         window.localStorage.setItem('todoList', JSON.stringify(updatedList));
         state.todoList = updatedList;
       }

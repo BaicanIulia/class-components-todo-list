@@ -1,9 +1,9 @@
 import { Container, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { TodoModal } from '@features';
 import { TodoItem } from '@components';
 import { FilterStatus, RootState, Todo } from '@types';
-import { useState } from 'react';
+import { Component } from 'react';
 
 const filterTodos = (todos: Todo[], filterStatus: FilterStatus) => {
   return todos
@@ -37,42 +37,68 @@ const filterTodos = (todos: Todo[], filterStatus: FilterStatus) => {
     });
 };
 
-export const TodoContent = () => {
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+type TodoContentProps = {
+  todos: Todo[];
+  filterStatus: FilterStatus;
+};
 
-  const todos = useSelector((state: RootState) => state.todo.todoList);
-  const filterStatus = useSelector(
-    (state: RootState) => state.todo.filterStatus,
-  );
+type TodoContentState = {
+  modalOpen: boolean;
+  selectedTodo: Todo | null;
+};
 
-  const filteredTodos = filterTodos(todos, filterStatus);
+class Content extends Component<TodoContentProps, TodoContentState> {
+  constructor(props: TodoContentProps) {
+    super(props);
 
-  const handleEdit = (todo: Todo) => {
-    setSelectedTodo(todo);
-    setUpdateModalOpen(true);
+    this.state = {
+      modalOpen: false,
+      selectedTodo: null,
+    };
+  }
+
+  handleEdit = (todo: Todo) => {
+    this.setState({ selectedTodo: todo, modalOpen: true });
   };
 
-  return (
-    <Container
-      sx={{
-        backgroundColor: 'lightBlue',
-        borderRadius: '10px',
-        padding: '10px',
-      }}
-    >
-      {filteredTodos.length > 0 ? (
-        filteredTodos.map((todo) => (
-          <TodoItem todo={todo} key={todo.id} onEdit={() => handleEdit(todo)} />
-        ))
-      ) : (
-        <Typography>No tasks found.</Typography>
-      )}
-      <TodoModal
-        modalOpen={updateModalOpen}
-        setModalOpen={setUpdateModalOpen}
-        todo={selectedTodo}
-      />
-    </Container>
-  );
-};
+  render() {
+    const { modalOpen, selectedTodo } = this.state;
+    const { todos, filterStatus } = this.props;
+
+    const filteredTodos = filterTodos(todos, filterStatus);
+
+    return (
+      <Container
+        sx={{
+          backgroundColor: 'lightBlue',
+          borderRadius: 2,
+          padding: 2.5 ,
+        }}
+      >
+        {filteredTodos.length > 0 ? (
+          filteredTodos.map((todo) => (
+            <TodoItem
+              todo={todo}
+              key={todo.id}
+              onEdit={() => this.handleEdit(todo)}
+            />
+          ))
+        ) : (
+          <Typography>No tasks found.</Typography>
+        )}
+        <TodoModal
+          modalOpen={modalOpen}
+          setModalOpen={(value) => this.setState({ modalOpen: value })}
+          todo={selectedTodo}
+        />
+      </Container>
+    );
+  }
+}
+
+const mapStateToProps = (state: RootState) => ({
+  todos: state.todo.todoList,
+  filterStatus: state.todo.filterStatus,
+});
+
+export const TodoContent = connect(mapStateToProps)(Content);
