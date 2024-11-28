@@ -45,8 +45,8 @@ class Modal extends Component<TodoModalProps, TodoItemState> {
     this.state = initialState;
   }
 
-  componentDidUpdate(prevProps: Readonly<TodoModalProps>) {
-    if (this.props.todo && this.props.todo !== prevProps.todo) {
+  componentDidMount() {
+    if (this.props.todo) {
       const { title, status, priority, dueDate } = this.props.todo;
       this.setState({
         title: title ?? '',
@@ -55,6 +55,10 @@ class Modal extends Component<TodoModalProps, TodoItemState> {
         dueDate: dueDate ?? undefined,
       });
     }
+  }
+
+  componentWillUnmount(): void {
+    this.setState(initialState)
   }
 
   handleChange = (
