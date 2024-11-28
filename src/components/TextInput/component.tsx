@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, Component } from 'react';
 
 type TextInputProps = {
   value: string;
@@ -8,14 +8,20 @@ type TextInputProps = {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const TextInput = ({ value, label, name, onChange }: TextInputProps) => (
-  <TextField
-    label={label}
-    name={name}
-    variant="outlined"
-    value={value}
-    onChange={onChange}
-    required
-    fullWidth
-  />
-);
+export class TextInput extends Component<TextInputProps> {
+  render() {
+    const { value, label, name, onChange } = this.props;
+    
+    return (
+      <TextField
+        label={label}
+        name={name}
+        variant="outlined"
+        value={value}
+        onChange={onChange}
+        required
+        fullWidth
+      />
+    );
+  }
+}
