@@ -39,6 +39,10 @@ class Header extends Component<TodoHeaderProps, TodoHeaderState> {
     this.props.updateFilterStatus({ [name]: value });
   };
 
+  handleModalOpen = (value: boolean) => {
+    this.setState({ modalOpen: value });
+  };
+
   render() {
     const {
       filterStatus: { status, priority, sortBy },
@@ -86,10 +90,12 @@ class Header extends Component<TodoHeaderProps, TodoHeaderState> {
             options={SORT_BY_OPTIONS}
           />
         </Box>
-        <TodoModal
-          modalOpen={modalOpen}
-          setModalOpen={(value) => this.setState({ modalOpen: value })}
-        />
+        {modalOpen && (
+          <TodoModal
+            modalOpen={modalOpen}
+            setModalOpen={this.handleModalOpen}
+          />
+        )}
       </Container>
     );
   }
