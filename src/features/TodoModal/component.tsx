@@ -14,7 +14,7 @@ import { addTodo, updateTodo } from '@store';
 import dayjs from 'dayjs';
 import { Todo } from '@types';
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '@lib/constants';
-import { Dispatch } from '@reduxjs/toolkit';
+import { Dispatch } from 'redux';
 
 type TodoModalProps = {
   modalOpen: boolean;
